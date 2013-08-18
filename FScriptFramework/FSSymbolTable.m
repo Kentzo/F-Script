@@ -63,7 +63,7 @@
       [coder decodeIntegerForKey:@"type"];
 	}  
     unsigned tmp;
-    [coder decodeValueOfObjCType:@encode(typeof(tmp)) at:&tmp];
+    [coder decodeValueOfObjCType:@encode(__typeof__(tmp)) at:&tmp];
     status = tmp;
     value  = [[coder decodeObject] retain];
     symbol = [[coder decodeObject] retain];
@@ -285,7 +285,7 @@ void __attribute__ ((constructor)) initializeForSymbolTabletoFSSymbolTableTransi
       id *loc;
       unsigned int locCount;
       //NSLog(@"version == 0");
-      [coder decodeValueOfObjCType:@encode(typeof(locCount)) at:&locCount];
+      [coder decodeValueOfObjCType:@encode(__typeof__(locCount)) at:&locCount];
       loc = malloc(locCount*sizeof(id));
       [coder decodeArrayOfObjCType:@encode(id) count:locCount at:loc];
       free(loc);
@@ -307,7 +307,7 @@ void __attribute__ ((constructor)) initializeForSymbolTabletoFSSymbolTableTransi
         locals[i].symbol = [[((SymbolTableValueWrapper *)[localsArray objectAtIndex:i]) symbol] retain]; 
       }    
     }        
-    [coder decodeValueOfObjCType:@encode(typeof(tryToAttachWhenDecoding)) at:&tryToAttachWhenDecoding];
+    [coder decodeValueOfObjCType:@encode(__typeof__(tryToAttachWhenDecoding)) at:&tryToAttachWhenDecoding];
     if (tryToAttachWhenDecoding && !parent && [coder isKindOfClass:[FSUnarchiver class]])
       parent = [[(FSUnarchiver *)coder loaderEnvironmentSymbolTable] retain];
   }  

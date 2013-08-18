@@ -180,8 +180,8 @@
   }
   else
   {
-    [coder encodeValueOfObjCType:@encode(typeof(deep)) at:&deep];
-    [coder encodeValueOfObjCType:@encode(typeof(levelCount)) at:&levelCount];
+    [coder encodeValueOfObjCType:@encode(__typeof__(deep)) at:&deep];
+    [coder encodeValueOfObjCType:@encode(__typeof__(levelCount)) at:&levelCount];
     [coder encodeArrayOfObjCType:@encode(int) count:levelCount at:level];
     [coder encodeObject:nextPattern];
   }  
@@ -207,8 +207,8 @@
   }
   else
   {
-    [coder decodeValueOfObjCType:@encode(typeof(deep)) at:&deep];
-    [coder decodeValueOfObjCType:@encode(typeof(levelCount)) at:&levelCount];
+    [coder decodeValueOfObjCType:@encode(__typeof__(deep)) at:&deep];
+    [coder decodeValueOfObjCType:@encode(__typeof__(levelCount)) at:&levelCount];
     level = NSAllocateCollectable(sizeof(int)*levelCount, 0);
     [coder decodeArrayOfObjCType:@encode(int) count:levelCount at:level];
     nextPattern = [[coder decodeObject] retain];

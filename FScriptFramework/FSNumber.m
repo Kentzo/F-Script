@@ -494,7 +494,7 @@ FSNumber *numberWithDouble(double val)
 - (const char *)objCType 
 {
   //NSLog(@"objCType called");
-  return @encode(typeof(value));
+  return @encode(__typeof__(value));
 }
 
 @end

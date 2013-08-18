@@ -320,15 +320,15 @@
       BOOL hasLocals;
     } sign;
 
-    [coder decodeValueOfObjCType:@encode(typeof(sign)) at:&sign];
+    [coder decodeValueOfObjCType:@encode(__typeof__(sign)) at:&sign];
     signature.argumentCount = sign.argumentCount;
     signature.hasLocals = sign.hasLocals;
     
     symbol_table = [[coder decodeObject] retain];
     source       = [[coder decodeObject] retain];
-    [coder decodeValueOfObjCType:@encode(typeof(is_compiled)) at:&is_compiled];
+    [coder decodeValueOfObjCType:@encode(__typeof__(is_compiled)) at:&is_compiled];
     interpreter = [[coder decodeObject] retain];
-    [coder decodeValueOfObjCType:@encode(typeof(isCompact)) at:&isCompact];
+    [coder decodeValueOfObjCType:@encode(__typeof__(isCompact)) at:&isCompact];
     
 	if (symbol_table == nil && [coder isKindOfClass:[FSUnarchiver class]]) // symbol_table == nil implies block has no locals (but note that "block has no locals" does not implies "symbol_table == nil")
       symbol_table = [[(FSUnarchiver *)coder loaderEnvironmentSymbolTable] retain]; 

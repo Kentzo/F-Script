@@ -162,14 +162,14 @@
   }
   else
   {
-    [coder encodeValueOfObjCType:@encode(typeof(firstCharIndex)) at:&firstCharIndex];
-    [coder encodeValueOfObjCType:@encode(typeof(lastCharIndex)) at:&lastCharIndex];
-    [coder encodeValueOfObjCType:@encode(typeof(nodeType)) at:&nodeType];
+    [coder encodeValueOfObjCType:@encode(__typeof__(firstCharIndex)) at:&firstCharIndex];
+    [coder encodeValueOfObjCType:@encode(__typeof__(lastCharIndex)) at:&lastCharIndex];
+    [coder encodeValueOfObjCType:@encode(__typeof__(nodeType)) at:&nodeType];
     
     switch (nodeType)
     {
     case IDENTIFIER:
-      [coder encodeValueOfObjCType:@encode(typeof(identifier)) at:&identifier];
+      [coder encodeValueOfObjCType:@encode(__typeof__(identifier)) at:&identifier];
       [coder encodeObject:identifierSymbol];
       break;
       
@@ -294,14 +294,14 @@
   }
   else
   {
-    [coder decodeValueOfObjCType:@encode(typeof(firstCharIndex)) at:&firstCharIndex];
-    [coder decodeValueOfObjCType:@encode(typeof(lastCharIndex)) at:&lastCharIndex];
-    [coder decodeValueOfObjCType:@encode(typeof(nodeType)) at:&nodeType];
+    [coder decodeValueOfObjCType:@encode(__typeof__(firstCharIndex)) at:&firstCharIndex];
+    [coder decodeValueOfObjCType:@encode(__typeof__(lastCharIndex)) at:&lastCharIndex];
+    [coder decodeValueOfObjCType:@encode(__typeof__(nodeType)) at:&nodeType];
     
     switch (nodeType)
     {
     case IDENTIFIER:
-      [coder decodeValueOfObjCType:@encode(typeof(identifier)) at:&identifier];
+      [coder decodeValueOfObjCType:@encode(__typeof__(identifier)) at:&identifier];
       identifierSymbol = [[coder decodeObject] retain];
       if ([coder isKindOfClass:[FSUnarchiver class]])
       { 

@@ -380,7 +380,7 @@ static NSInteger p = 362;
 
 + (FSPointer *)fsPointer 
 {
-  return [[[FSGenericPointer alloc] initWithCPointer:&p freeWhenDone:NO type:@encode(typeof(p))] autorelease];
+  return [[[FSGenericPointer alloc] initWithCPointer:&p freeWhenDone:NO type:@encode(__typeof__(p))] autorelease];
 }
 
 + (NSInteger) sized

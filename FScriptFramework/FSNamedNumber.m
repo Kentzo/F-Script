@@ -49,7 +49,7 @@
 
 - (const char *)objCType 
 {
-  return @encode(typeof(value));
+  return @encode(__typeof__(value));
 }
 
 

@@ -178,13 +178,13 @@ void __attribute__ ((constructor)) initializeFSExecutor(void)
   else
   {
     interpreter = [coder decodeObject]; // WARNING : no retain in order to avoid a cycle  
-    [coder decodeValueOfObjCType:@encode(typeof(should_journal)) at:&should_journal];
+    [coder decodeValueOfObjCType:@encode(__typeof__(should_journal)) at:&should_journal];
 
     if ([coder versionForClassName:@"Executor"] == 0)
     { 
 	  int temp;
       [coder decodeObject]; // In version 0 we stored the journal Name. 
-      [coder decodeValueOfObjCType:@encode(typeof(verboseLevel)) at:&temp];
+      [coder decodeValueOfObjCType:@encode(__typeof__(verboseLevel)) at:&temp];
     }
   
     localSymbolTable = [[coder decodeObject] retain];
