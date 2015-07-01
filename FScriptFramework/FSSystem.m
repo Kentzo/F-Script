@@ -262,10 +262,12 @@ static BOOL loadNonKeyedArchives;
   NSString *logFmt = @"failure of loading: %@";
   
   FSVerifClassArgsNoNil(@"load:",1,fileName,[NSString class]);
-            
-  @try       
-  { 
-    data = [NSData dataWithContentsOfFile:fileName];
+  
+  BOOL unknownFileFormat = NO;
+  @try
+  {
+    NSError* error = nil;
+    data = [NSData dataWithContentsOfFile:fileName options:0 error:&error ];
     if (data)
     {
       if (loadNonKeyedArchives)
@@ -282,15 +284,18 @@ static BOOL loadNonKeyedArchives;
         }
         @catch (id exception)
         {
-          unarchiver = [[[FSUnarchiver alloc] initForReadingWithData:data loaderEnvironmentSymbolTable:[executor symbolTable] symbolTableForCompiledCodeNode:nil] autorelease];
-          r = [unarchiver decodeObject];
+            unarchiver = [[[FSUnarchiver alloc] initForReadingWithData:data loaderEnvironmentSymbolTable:[executor symbolTable] symbolTableForCompiledCodeNode:nil] autorelease];
+            r = [unarchiver decodeObject];
+            if (r == nil) {
+              unknownFileFormat = YES;
+            }
         }
       }
     }
     else
     {
       r = nil;
-      errStr = [NSString stringWithFormat:@"loading: can't open file %@",fileName];
+      errStr = [NSString stringWithFormat:@"loading: can't open file %@. Error (%lu) = %@",fileName,error.code, error.localizedDescription];
     }
   }  
   @catch (id exception)
@@ -302,6 +307,9 @@ static BOOL loadNonKeyedArchives;
   if (r == nil)
   {
     if (!errStr) errStr = @"failure of loading";
+    if (unknownFileFormat) {
+       errStr = [ NSString stringWithFormat:@"%@: File %@ is in an unknown format (should be a valid keyed archive)",errStr, fileName ];
+    }
     FSExecError(errStr);
   }
   return r;    

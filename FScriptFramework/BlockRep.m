@@ -527,7 +527,7 @@
       sel = [FSCompiler selectorFromString:selStr]; 
       if (sel == (SEL)0) FSExecError(@"The #<null selector> block cannot be evaluated");
     }    
-    args[1] = (id)sel;
+    args[1] = (id)sel_getName(sel);
     r = sendMsgNoPattern(args[0], sel, count, args, msgContext, nil);   // May raise    
   }
   @catch (FSReturnSignal *returnSignal)

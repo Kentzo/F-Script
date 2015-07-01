@@ -43,7 +43,6 @@ static NSPoint topLeftPoint = {0,0}; // Used for cascading windows.
     [self retain]; // we must stay alive while our window exist cause we are its delegate (and NSWindow doesn't retain its delegate).
  
     [NSBundle loadNibNamed:@"FSCollectionInspector.nib" owner:self];
-
     [collectionInspectorView setCollection:theCollection interpreter:theInterpreter blocks:blocks showExternals:showExternals];
     
     topLeftPoint = [[collectionInspectorView window] cascadeTopLeftFromPoint:topLeftPoint];

@@ -573,7 +573,8 @@ static int comp(const void *a,const void *b)
 
   if (count == 0) return [FSArray array]; // mergesort() crashes if passed an empty array 
   
-  if (count >= 2 && ([self objectAtIndex:0] && ![[self objectAtIndex:0] respondsToSelector:@selector(operator_less:)] || [self objectAtIndex:count/2] && ![[self objectAtIndex:count/2] respondsToSelector:@selector(operator_less:)]))
+  if (count >= 2 && (([self objectAtIndex:0] && ![[self objectAtIndex:0] respondsToSelector:@selector(operator_less:)]) || ([self objectAtIndex:count/2] && ![[self objectAtIndex:count/2] respondsToSelector:@selector(operator_less:)])))
+    FSExecError(@"elements must responds to \"<\"");
       FSExecError(@"elements must responds to \"<\"");
   
   @try

@@ -5,30 +5,42 @@
 #import "FSObjectBrowser.h"
 #import "FSObjectBrowserView.h"
 #import "FSObjectBrowserToolbar.h"
+#import "FSObjectBrowserWindow.h"
 #import "FSObjectBrowserButtonsInspector.h"
 #import "FSMiscTools.h"
      
 static FSObjectBrowserButtonsInspector *buttonsInspector;
 static NSPoint topLeftPoint = {0,0}; // Used for cascading windows.
+static NSMutableArray *sObjectBrowsers;
+
+@interface FSObjectBrowser ()
+@property (nonatomic) BOOL hasAwoken;
+@end
 
 @implementation FSObjectBrowser 
++(NSMutableArray*)objectBrowsers
+{
+  if (!sObjectBrowsers) {
+    sObjectBrowsers = [NSMutableArray new];
+  }
+  return sObjectBrowsers;
+}
 
 +(FSObjectBrowser *)objectBrowserWithRootObject:(id)object interpreter:(FSInterpreter *)interpreter
 {
-  return [[self alloc] initWithRootObject:object interpreter:interpreter]; // NO autorelease. The window will be released when closed.
+  FSObjectBrowser *newBrowser = [[self alloc] initWithRootObject:object interpreter:interpreter]; // NO autorelease. The window will be released when closed.
+  [[self objectBrowsers] addObject:newBrowser];
+  return newBrowser;
 }
  
-- (void) browseWorkspace { [[self contentView] browseWorkspace]; } 
+- (void) browseWorkspace {
+  [self.objectBrowserView browseWorkspace];
+}
  
--(void) dealloc
-{
-  //NSLog(@"\n FSObjectBrowser dealloc\n");
-  [super dealloc];
-} 
 
 - (NSSearchField *)visibleSearchField
 {
-  NSArray *visibleItems = [[self toolbar] visibleItems];
+  NSArray *visibleItems = [[self.window toolbar] visibleItems];
   for (NSUInteger i = 0, count = [visibleItems count]; i < count; i++)
   {
     if ([[[visibleItems objectAtIndex:i] itemIdentifier] isEqualToString:@"Filter"])
@@ -41,68 +53,70 @@ static NSPoint topLeftPoint = {0,0}; // Used for cascading windows.
  
 -(FSObjectBrowser *)initWithRootObject:(id)object interpreter:(FSInterpreter *)interpreter
 {
-  FSObjectBrowserView *bbv;
-  
-  [super initWithContentRect:NSMakeRect(100,100,830,400) styleMask:NSTitledWindowMask | NSClosableWindowMask | NSMiniaturizableWindowMask | NSResizableWindowMask /*| NSTexturedBackgroundWindowMask*/ backing:NSBackingStoreBuffered defer:NO];
-  
-  [self setMinSize:NSMakeSize(130,130)]; // FSObjectBrowserView has weird behavior if the window becomes too tiny
-    
-  bbv = [[FSObjectBrowserView alloc] initWithFrame:[[self contentView] bounds]];
-  [bbv setRootObject:object];
-  [bbv setInterpreter:interpreter];
-  [bbv setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
-  [self setContentView:bbv];
-  // jg added from here
-  if ([bbv respondsToSelector:@selector(setupToolbarWithWindow:)]) {
-    if ([bbv doSetupToolbar])
-      [bbv setupToolbarWithWindow:self]; // defined in FSObjectBrowserToolBar.m
+  self = [super init];
+  if (self) {
+    self.rootObject = object;
+    self.interpreter = interpreter;
   }
-  // jg added to here
-  [bbv release];
   
-  NSSearchField *searchField = [self visibleSearchField]; 
-  if (searchField) [self setInitialFirstResponder:searchField];  
-  
-  //[self makeFirstResponder:bbv];  // If I don't do that, the mouse moved events are not sent to the bbv.
-  
-  [self setContentBorderThickness:FSObjectBrowserBottomBarHeight+1 forEdge:NSMinYEdge]; // Adding 1 here to FSObjectBrowserBottomBarHeight produces a prettier visual effect
-
-  [self setAcceptsMouseMovedEvents:YES];
-  [self setTitle:@"F-Script Object Browser"];
-  topLeftPoint = [self cascadeTopLeftFromPoint:topLeftPoint];
-  //[self makeKeyAndOrderFront:nil];
   return self;
 }
 
-- (void)sendEvent:(NSEvent *)theEvent
+-(void)awakeFromNib
 {
-  // Goal: route most key events directly to the searchfield
- 
-  if ([theEvent type] == NSKeyDown)
-  {
-    unichar character = [[theEvent characters] characterAtIndex:0];
-    if (character != NSLeftArrowFunctionKey && character != NSRightArrowFunctionKey && character != NSUpArrowFunctionKey && character != NSDownArrowFunctionKey)    
-    {
-      NSSearchField *searchField = [self visibleSearchField]; 
-      if (searchField && [searchField currentEditor] == nil) // If the searchfield is not already active then we make it become the first responder
-        [self makeFirstResponder:searchField]; 
+  if (!self.hasAwoken) {
+    self.hasAwoken = YES;
+    // jg added from here
+    if ([self.objectBrowserView respondsToSelector:@selector(setupToolbarWithWindow:)]) {
+      if ([self.objectBrowserView doSetupToolbar])
+        [self.objectBrowserView setupToolbarWithWindow:self.window]; // defined in FSObjectBrowserToolBar.m
     }
-  }  
-  [super sendEvent:theEvent];
+    // jg added to here
+    NSSearchField *searchField = [self visibleSearchField];
+    if (searchField) [self.window setInitialFirstResponder:searchField];
+    
+    [self.window setAcceptsMouseMovedEvents:YES];
+    [(FSObjectBrowserWindow*)self.window setVisibleSearchField:searchField];
+    self.objectBrowserView.rootObject = self.rootObject;
+    self.objectBrowserView.interpreter = self.interpreter;
+    topLeftPoint = [self.window cascadeTopLeftFromPoint:topLeftPoint];
+  }
+  
 }
 
-- (void)runToolbarCustomizationPalette:(id)sender
+-(void)windowWillClose:(NSNotification *)notification
 {
-  if (!buttonsInspector) buttonsInspector = [[FSObjectBrowserButtonsInspector alloc] init];
-  [super runToolbarCustomizationPalette:sender];
-  [buttonsInspector activate];
+  self.window.delegate = nil;
+  [[FSObjectBrowser objectBrowsers] removeObject:self];
 }
 
-- (BOOL)worksWhenModal
+-(void)makeKeyAndOrderFront:(id)sender
 {
-  // Since F-Script is often used as a debugging tool, we want it to 
-  // continue working even when some other window is being run modally
-  return YES;
+  [self.window makeKeyAndOrderFront:sender];
+}
+
+-(NSString *)windowNibName
+{
+  return @"FSObjectBrowser";
+}
+
+-(NSString *)windowNibPath
+{
+  return [[[NSBundle bundleForClass:FSObjectBrowser.class] URLForResource:@"FSObjectBrowser" withExtension:@"nib"] path ];
+}
+
+-(void)floatWindow:(id)sender
+{
+        if (self.window.level == NSNormalWindowLevel) {
+                self.window.level = NSFloatingWindowLevel;
+        }
+        else {
+                self.window.level = NSNormalWindowLevel;
+        }
+}
+
+-(void)dealloc {
+  
 }
 
 @end

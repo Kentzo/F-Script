@@ -15,6 +15,10 @@
 {
   return NSMakeRange(location,length);
 }
++ (NSEdgeInsets)edgeInsetsWithTop:(CGFloat)top left:(CGFloat)left bottom:(CGFloat)bottom right:(CGFloat)right
+{
+  return NSEdgeInsetsMake(top, left, bottom, right);
+}
  
 + (NSSize)sizeWithWidth:(CGFloat)width height:(CGFloat)height
 {
@@ -234,4 +238,50 @@
   else return [self pointValue].y;
 }
 
+
+- (CGFloat)top
+{
+  if (strcmp([self objCType],@encode(NSEdgeInsets)) != 0)
+  {
+    if ([self isKindOfClass:[NSNumber class]])
+      FSExecError(@"message \"top\" sent to a number");
+    else
+      FSExecError(@"message \"top\" sent to an NSValue that does not contain an NSEdgeInsets");
+  }
+  else return [self edgeInsetsValue].top;
+}
+
+- (CGFloat)left
+{
+  if (strcmp([self objCType],@encode(NSEdgeInsets)) != 0)
+  {
+    if ([self isKindOfClass:[NSNumber class]])
+      FSExecError(@"message \"left\" sent to a number");
+    else
+      FSExecError(@"message \"left\" sent to an NSValue that does not contain an NSEdgeInsets");
+  }
+  else return [self edgeInsetsValue].left;
+}
+- (CGFloat)bottom
+{
+  if (strcmp([self objCType],@encode(NSEdgeInsets)) != 0)
+  {
+    if ([self isKindOfClass:[NSNumber class]])
+      FSExecError(@"message \"bottom\" sent to a number");
+    else
+      FSExecError(@"message \"bottom\" sent to an NSValue that does not contain an NSEdgeInsets");
+  }
+  else return [self edgeInsetsValue].bottom;
+}
+- (CGFloat)right
+{
+  if (strcmp([self objCType],@encode(NSEdgeInsets)) != 0)
+  {
+    if ([self isKindOfClass:[NSNumber class]])
+      FSExecError(@"message \"right\" sent to a number");
+    else
+      FSExecError(@"message \"right\" sent to an NSValue that does not contain an NSEdgeInsets");
+  }
+  else return [self edgeInsetsValue].right;
+}
 @end

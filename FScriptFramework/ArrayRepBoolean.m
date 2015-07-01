@@ -46,7 +46,7 @@
     FSMsgContext *msgContext = [bl msgContext];
     long acu = t[0];
 
-    args[1] = (id)(selector ? selector : [FSCompiler selectorFromString:selectorStr]);
+    args[1] = (id)sel_getName(selector ? selector : [FSCompiler selectorFromString:selectorStr]);
 
     if (selector == @selector(operator_ampersand:)) 
     {

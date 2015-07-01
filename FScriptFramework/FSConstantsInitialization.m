@@ -34,7 +34,7 @@ void FSConstantsInitialization(NSMutableDictionary *d)
   [d setObject:[NSNumber numberWithLong:NSIntegerMax]             forKey:@"NSIntegerMax"];
   [d setObject:[NSNumber numberWithLong:NSIntegerMin]             forKey:@"NSIntegerMin"];
   [d setObject:[NSNumber numberWithUnsignedLong:NSUIntegerMax]    forKey:@"NSUIntegerMax"];
-  [d setObject:[NSNumber numberWithLong:NSUndefinedDateComponent] forKey:@"NSUndefinedDateComponent"];
+  [d setObject:[NSNumber numberWithLong:NSDateComponentUndefined] forKey:@"NSDateComponentUndefined"];
   
 #ifdef __LP64__
   // 64-bit code

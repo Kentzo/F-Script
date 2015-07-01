@@ -144,6 +144,7 @@ id FSMapToObject(void *valuePtr, NSUInteger index, char fsEncodedType, const cha
       case fscode_CGSize:  return [NSValue valueWithSize:((NSSize *)valuePtr)[index]];
       case fscode_NSRect:
       case fscode_CGRect:  return [NSValue valueWithRect:((NSRect *)valuePtr)[index]];
+      case fscode_NSEdgeInsets:  return [NSValue valueWithEdgeInsets:((NSEdgeInsets *)valuePtr)[index]];
       case fscode_CGAffineTransform: return FSNSAffineTransformFromCGAffineTransform(((CGAffineTransform *)valuePtr)[index]);
       case '*':
       case '^': 
@@ -302,6 +303,13 @@ void FSMapFromObject(void *valuePtr, NSUInteger index, char fsEncodedType, id ob
     if      (![object isKindOfClass:[NSValue class]])          FSExecError([NSString stringWithFormat:@"%@ is %@. An instance of NSValue containing a NSRect was expected", description(mapType, argumentNumber, selector, ivarName), descriptionForFSMessage(object)]);
     else if (strcmp([object objCType], @encode(NSRect)) != 0)  FSExecError([NSString stringWithFormat:@"%@ must be an NSValue containing a NSRect", description(mapType, argumentNumber, selector, ivarName)]);    
     else                                                       ((NSRect *)valuePtr)[index] = [object rectValue];
+    break;
+  }
+    case fscode_NSEdgeInsets:
+  {
+    if      (![object isKindOfClass:[NSValue class]])          FSExecError([NSString stringWithFormat:@"%@ is %@. An instance of NSValue containing a NSEdgeInsets was expected", description(mapType, argumentNumber, selector, ivarName), descriptionForFSMessage(object)]);
+    else if (strcmp([object objCType], @encode(NSEdgeInsets)) != 0)  FSExecError([NSString stringWithFormat:@"%@ must be an NSValue containing a NSEdgeInsets", description(mapType, argumentNumber, selector, ivarName)]);
+    else                                                       ((NSEdgeInsets *)valuePtr)[index] = [object edgeInsetsValue];
     break;
   }
   case fscode_CGAffineTransform:
@@ -859,7 +867,7 @@ id sendMsgPattern(id receiver, SEL selector, NSUInteger argumentCount, id *args,
     r_size_tab[currentDeep] = size;
   }   
     
-  subArgs[1] = (id)selector;
+  subArgs[1] = (id)sel_getName(selector);
     
   if ([pattern isSimpleLoopOnReceiver]) 
   {
@@ -872,10 +880,10 @@ id sendMsgPattern(id receiver, SEL selector, NSUInteger argumentCount, id *args,
         id r;
         
         args[0] = [receiver arrayRep];
-        args[1] = (id)wiredSelector;
+        args[1] = (id)sel_getName(wiredSelector);
         r = sendMsgNoPattern(args[0], wiredSelector, argumentCount, args, msgContext, nil);
         args[0] = receiver;
-        args[1] = (id)selector;
+        args[1] = (id)sel_getName(selector);
         return r;
       } 
     }
@@ -944,11 +952,11 @@ id sendMsgPattern(id receiver, SEL selector, NSUInteger argumentCount, id *args,
         
         args[0] = [receiver arrayRep];
         //((SEL)args[1]) = wiredSelector;
-        args[1] = (id)wiredSelector;
+        args[1] = (id)sel_getName(wiredSelector);
 
         r = sendMsgNoPattern(args[0], wiredSelector, argumentCount, args, msgContext, nil);
         args[0] = receiver;
-        args[1] = (id)selector;
+        args[1] = (id)sel_getName(selector);
         return r;
       } 
     }
@@ -1298,7 +1306,7 @@ id execute_rec(FSCNBase *codeNode, FSSymbolTable *localSymbolTable, NSInteger *e
     @try
     {      
       arguments[0] = execute_rec(node->receiver, localSymbolTable, errorFirstCharIndexPtr, errorLastCharIndexPtr);
-      arguments[1] = (id)(node->selector );
+      arguments[1] = (id)sel_getName(node->selector);
 
       if      (codeNode->nodeType == BINARY_MESSAGE) arguments[2] = execute_rec( ((FSCNBinaryMessage *)node)->argument, localSymbolTable, errorFirstCharIndexPtr, errorLastCharIndexPtr);
       else if (codeNode->nodeType == KEYWORD_MESSAGE)
@@ -1386,7 +1394,7 @@ id execute_rec(FSCNBase *codeNode, FSSymbolTable *localSymbolTable, NSInteger *e
       @try
       {
         arguments[0] = receiver;
-        arguments[1] = (id)(messageNode->selector);
+        arguments[1] = (id)sel_getName(messageNode->selector);
 
         if      (messageNode->nodeType == BINARY_MESSAGE) arguments[2] = execute_rec( ((FSCNBinaryMessage *)messageNode)->argument, localSymbolTable, errorFirstCharIndexPtr, errorLastCharIndexPtr);
         else if (messageNode->nodeType == KEYWORD_MESSAGE)

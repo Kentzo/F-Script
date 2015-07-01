@@ -4,15 +4,17 @@
 #import <AppKit/AppKit.h>
 
 @class FSInterpreter;
+@class FSObjectBrowserView;
 
-@interface FSObjectBrowser : NSWindow 
-{
-}
+@interface FSObjectBrowser : NSWindowController <NSWindowDelegate>
 
 + (FSObjectBrowser *)objectBrowserWithRootObject:(id)object interpreter:(FSInterpreter *)interpreter;
 - (void) browseWorkspace;
 - (void)dealloc;
 - (FSObjectBrowser *)initWithRootObject:(id)object interpreter:(FSInterpreter *)interpreter;
-- (BOOL)worksWhenModal;
 
+@property (strong,nonatomic) IBOutlet id rootObject;
+@property (strong,nonatomic) IBOutlet FSInterpreter* interpreter;
+@property (weak,nonatomic) IBOutlet FSObjectBrowserView *objectBrowserView;
+-(IBAction)floatWindow:(id)sender;
 @end

@@ -3,10 +3,8 @@
 
 #import <Foundation/Foundation.h>
 
+@class FSObjectInspectorViewModelItem;
 
 @interface FSObjectBrowserMatrix : NSMatrix
-{
-
-}
-
+@property (strong,nonatomic) FSObjectInspectorViewModelItem *rootViewModelItem;
 @end

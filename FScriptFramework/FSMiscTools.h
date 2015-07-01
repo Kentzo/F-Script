@@ -22,7 +22,7 @@ ffi_type *ffiTypeFromFSEncodedType(char fsEncodedType);
 
 enum e_FSObjCTypeCode {fscode_CGAffineTransform = '9',
                        fscode_NSRect = 'w', fscode_NSSize = 'x', fscode_NSPoint = 'y', fscode_NSRange = 'z',
-                       fscode_CGRect = 'W', fscode_CGSize = 'X', fscode_CGPoint = 'Y'};
+                       fscode_CGRect = 'W', fscode_CGSize = 'X', fscode_CGPoint = 'Y', fscode_NSEdgeInsets = 'Z'};
 
 char FSEncode(const char *foundationEncodeStyleStr);
 

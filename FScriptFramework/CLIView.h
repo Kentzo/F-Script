@@ -1,7 +1,36 @@
 /* CLIView.h Copyright (c) 1998-2009 Philippe Mougin.    */
 /*   This software is open source. See the license.  */  
 
-/* CLIView is the public API for a Command Line Interface component.*/
+///  CLIView is the public API for a Command Line Interface component.
+/**
+
+The organisation of the view hierarchy:
+
+      ----- CLIView --------------------------------------
+      |                                                  |
+      | ----- NSScrollView ----------------------------  |
+      | |                                             |  |
+      | |  ----- ShellView -------------------------  |  |
+      | |  | prompt>                               |  |  |
+      | |  |                                       |  |  |
+      | |  |                                       |  |  |
+      | |  |                                       |  |  |
+      | |  |                                       |  |  |
+      | |  |                                       |  |  |
+      | |  -----------------------------------------  |  |
+      | |                                             |  |
+      | -----------------------------------------------  |
+      |                                                  |
+      ----------------------------------------------------
+
+A CLIView has one subview: an NSScrollView.
+ 
+This NSScrollView has a ShellView as document view.
+
+The ShellView is the view that displays the prompt, receive the keyboard events from the user, display
+the commands entered by the user and the results of those commands etc.  
+
+*/
 
 #import <AppKit/AppKit.h>
 

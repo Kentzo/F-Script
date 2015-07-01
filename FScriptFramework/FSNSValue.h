@@ -41,5 +41,10 @@
 - (CGFloat)height;
 - (CGFloat)width;
 
++ (NSEdgeInsets)edgeInsetsWithTop:(CGFloat)top left:(CGFloat)left bottom:(CGFloat)bottom right:(CGFloat)right;
+-(CGFloat)top;
+-(CGFloat)left;
+-(CGFloat)bottom;
+-(CGFloat)right;
 
 @end

@@ -247,7 +247,7 @@
   // Required delegate method   Returns the ordered list of items to be shown in the toolbar by default
   // If during the toolbar's initialization, no overriding values are found in the user defaults, or if the
   // user chooses to revert to the default items self set will be used
-  return [NSArray arrayWithObjects: @"Workspace", @"Classes", @"Select View", @"Name", @"Inspect", @"Browse", @"Refresh", @"Filter", nil];
+  return [NSArray arrayWithObjects: @"Filter", @"Workspace", @"Classes", @"Select View", @"Name", @"Inspect", @"Browse", @"Refresh", nil];
 }
 
 - (NSArray *) toolbarAllowedItemIdentifiers: (NSToolbar *) toolbar 
@@ -305,8 +305,13 @@
 //  id selectedObject = [self selectedObject];
   id block=[interpreter objectForIdentifier:title found:&found];
   if (!found) {
-    NSInteger choice=NSRunAlertPanel(@"Undefined block", [NSString stringWithFormat:@"Could not find block with name %@", title], @"Cancel", @"Remove Menu Entry", nil);
-    if (choice) {
+    NSAlert *alert = [[NSAlert alloc] init];
+    [alert addButtonWithTitle:@"Cancel"]; //default
+    [alert addButtonWithTitle:@"Remove Menu Entry"]; //alternate
+    [alert setMessageText:@"Undefined block"];
+    [alert setInformativeText:[NSString stringWithFormat:@"Could not find block with name %@", title]];
+    [alert setAlertStyle:NSWarningAlertStyle];
+    if ([alert runModal] == NSAlertSecondButtonReturn) {
       [[self class] removeCustomBlockMenuIdentifier:title];
     }
   } else {

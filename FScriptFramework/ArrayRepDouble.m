@@ -75,7 +75,7 @@ static int comp(const void *a,const void *b)
       FSMsgContext *msgContext = [bl msgContext];
       double acu = t[0];
 
-      args[1] = (id)(selector ? selector : [FSCompiler selectorFromString:selectorStr]);
+      args[1] = (id)sel_getName(selector ? selector : [FSCompiler selectorFromString:selectorStr]);
 
       if (selector == @selector(operator_plus:)) { for (i = 1 ; i < count; i++) acu += t[i]         ; return [FSNumber numberWithDouble:acu]; }
       else if (selector == @selector(max:))      { for (i = 1 ; i < count; i++) acu = MAX(acu, t[i]); return [FSNumber numberWithDouble:acu]; }

@@ -187,6 +187,7 @@ if (s == nil) return nil;
     case fscode_CGSize:            itemSize = sizeof(NSSize);             break;
     case fscode_NSRect:  
     case fscode_CGRect:            itemSize = sizeof(NSRect);             break;
+    case fscode_NSEdgeInsets:      itemSize = sizeof(NSEdgeInsets);       break;
     case fscode_CGAffineTransform: itemSize = sizeof(CGAffineTransform);  break;
     default:                       itemSize = 0;
   }   

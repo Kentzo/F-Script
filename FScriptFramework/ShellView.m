@@ -109,7 +109,7 @@ static BOOL useMaxSize;
   if (self = [super initWithFrame:frameRect])
   {
     prompt             = [thePrompt retain];
-    history            = [[FSCommandHistory alloc] initWithUIntSize:theHistorySize];
+    history            = [FSCommandHistory latestHistoryWithSize:theHistorySize];
     parserMode         = NO_DECOMPOSE;
     commandHandler     = [theCommandHandler retain];
     lineEdited         = NO;
@@ -267,14 +267,14 @@ static BOOL useMaxSize;
   
   if ([self selectedRange].location < start || [self selectedRange].location == loc) // moved before start of command || not moved because we are on the first line of the text view
   {
-    if ([self selectedRange].location >= start-[prompt length] && [self selectedRange].location < start)
-      // we are on the prompt, so we move to the start of the current command (the insertion point should not be on the prompt)
-      [self setSelectedRange:NSMakeRange(start,0)];
-    else
-    {
+    if (loc >= start - prompt.length && self.selectedRange.location < start) {
       [self saveEditedCommand:self];
       [self replaceCurrentCommandWith:[[history goToPrevious] getStr]]; 
-    } 
+    }
+    if ([self selectedRange].location >= start-[prompt length] && [self selectedRange].location < start) {
+      // we are on the prompt, so we move to the start of the current command (the insertion point should not be on the prompt)
+      [self setSelectedRange:NSMakeRange(start,0)];
+    }
   }
 }
 

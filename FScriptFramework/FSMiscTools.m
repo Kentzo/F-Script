@@ -14,6 +14,8 @@
 #import <ExceptionHandling/NSExceptionHandler.h>
 #import <Cocoa/Cocoa.h>
 #import "FSCollectionInspector.h"
+#import "FSDetailedObjectInspector.h"
+#import "FSObjectBrowserViewObjectInfo.h"
 #import "FSGenericObjectInspector.h"
 #import "FSInterpreter.h"
 //#import "FScript.h"
@@ -28,7 +30,7 @@
 
 @class _NSZombie, NSFault, NSRTFD;
 
-static ffi_type ffi_type_NSRange, ffi_type_NSPoint, ffi_type_NSRect, ffi_type_NSSize, ffi_type_CGAffineTransform;
+static ffi_type ffi_type_NSRange, ffi_type_NSPoint, ffi_type_NSRect, ffi_type_NSSize, ffi_type_CGAffineTransform, ffi_type_NSEdgeInsets;
 
 void __attribute__ ((constructor)) initializeFFITypes(void)
 {
@@ -84,6 +86,18 @@ void __attribute__ ((constructor)) initializeFFITypes(void)
   ffi_type_NSRect.elements[0] = &ffi_type_NSPoint;
   ffi_type_NSRect.elements[1] = &ffi_type_NSSize;
   ffi_type_NSRect.elements[2] = NULL;
+  
+  
+  //////////////////////////// Define ffi_type_NSEdgeInsets
+  ffi_type_NSEdgeInsets.size = 0;
+  ffi_type_NSEdgeInsets.alignment = 0;
+  ffi_type_NSEdgeInsets.type = FFI_TYPE_STRUCT;
+  ffi_type_NSEdgeInsets.elements = malloc(5 * sizeof(ffi_type*));
+  ffi_type_NSEdgeInsets.elements[0] = &ffi_type_double;
+  ffi_type_NSEdgeInsets.elements[1] = &ffi_type_double;
+  ffi_type_NSEdgeInsets.elements[2] = &ffi_type_double;
+  ffi_type_NSEdgeInsets.elements[3] = &ffi_type_double;
+  ffi_type_NSEdgeInsets.elements[4] = NULL;
   
   //////////////////////////// Define ffi_type_CGAffineTransform
   ffi_type_CGAffineTransform.size = 0;                    
@@ -218,7 +232,8 @@ ffi_type *ffiTypeFromFSEncodedType(char fsEncodedType)
     case fscode_NSRect            :  
     case fscode_CGRect            : return &ffi_type_NSRect; 
     case fscode_NSSize            : 
-    case fscode_CGSize            : return &ffi_type_NSSize; 
+    case fscode_CGSize            : return &ffi_type_NSSize;
+    case fscode_NSEdgeInsets      : return &ffi_type_NSEdgeInsets;
     case fscode_CGAffineTransform : return &ffi_type_CGAffineTransform;
     case 'B'           : // No ffi_type defined yet for _Bool (Mac OS X 10.5.4), so we handle it ourselves
       if      (sizeof(_Bool) == 4) return &ffi_type_uint32; 
@@ -230,15 +245,21 @@ ffi_type *ffiTypeFromFSEncodedType(char fsEncodedType)
   return NULL;
 }
 
+// Return the main type in a type encoding. This is the type code from the Objective-C Runtime Programming guide,
+// but with FScript-specific types for structures that have special FScript type representations.
+// i.e., NSRange, NSPoint, NSSize, NSRect, CGPoint, CGSize, CGRect and CGAffineTransform
 char FSEncode(const char *foundationEncodeStyleStr)
 {
   // NSLog(@"FSEncode called with \"%s\"", foundationEncodeStyleStr);
   
   const char *ptr = foundationEncodeStyleStr;
 
+  // Skip protocol type qualifiers (const', 'in', 'inout', etc.)
   while (*ptr == 'r' || *ptr == 'n' || *ptr == 'N' || *ptr == 'o' || *ptr == 'O' || *ptr == 'R' || *ptr == 'V')
     ptr++;
   
+  // Found a struct type '{<name>=...}'. If '<name> matches a struct with a type FScript has a special representation
+  // for, return a type-code specific to FScript.
   if (*ptr == '{') 
   {
     // NSLog([NSString stringWithFormat:@"ptr = %s",ptr]);
@@ -250,6 +271,7 @@ char FSEncode(const char *foundationEncodeStyleStr)
     else if  (strcmp(ptr,@encode(NSPoint))            == 0 || strncmp(ptr,"{_NSPoint="         , 10) == 0) return fscode_NSPoint;
     else if  (strcmp(ptr,@encode(NSSize))             == 0 || strncmp(ptr,"{_NSSize="          ,  9) == 0) return fscode_NSSize;
     else if  (strcmp(ptr,@encode(NSRect))             == 0 || strncmp(ptr,"{_NSRect="          ,  9) == 0) return fscode_NSRect;
+    else if  (strcmp(ptr,@encode(NSEdgeInsets))       == 0 || strncmp(ptr,"{_NSEdgeInsets="    , 15) == 0) return fscode_NSEdgeInsets;
     else if  (strcmp(ptr,@encode(CGPoint))            == 0 || strncmp(ptr,"{CGPoint="          ,  9) == 0) return fscode_CGPoint;
     else if  (strcmp(ptr,@encode(CGSize))             == 0 || strncmp(ptr,"{CGSize="           ,  8) == 0) return fscode_CGSize;
     else if  (strcmp(ptr,@encode(CGRect))             == 0 || strncmp(ptr,"{CGRect="           ,  8) == 0) return fscode_CGRect;
@@ -286,6 +308,31 @@ BOOL FSIsIgnoredSelector(SEL selector)
   return (selector == @selector(retain) && selector == @selector(release));
 }
 
+@interface FSInspectorRepository : NSObject
++(void)addInspector:(id)inspector;
++(void)removeInspector:(id) inspector;
+@end
+@implementation FSInspectorRepository
+static NSMutableSet *sInspectors = nil;
++(void)initialize
+{
+  if (self == FSInspectorRepository.class) {
+    sInspectors = [NSMutableSet new];
+  }
+}
+
++(void)addInspector:(id)inspector
+{
+  [sInspectors addObject:inspector];
+}
++(void)removeInspector:(NSNotification*)notification
+{
+  id inspector = [notification.object delegate];
+  [sInspectors removeObject:inspector];
+}
+@end
+
+
 void inspect(id object, FSInterpreter *interpreter, id argument)
 {
   BOOL error = NO;
@@ -296,23 +343,43 @@ void inspect(id object, FSInterpreter *interpreter, id argument)
   {
     @try  // An exception may occur if the object is invalid (e.g. an invalid proxy)
     {
-        [object respondsToSelector:@selector(inspect)];
+      [object respondsToSelector:@selector(inspect)];
     }
     @catch (id exception)
     {
       error= YES;
       [FSGenericObjectInspector genericObjectInspectorWithObject:object];
     }
-
+    
     if (!error)
-    {  
+    {
       if ([object respondsToSelector:@selector(inspectWithSystem:)])
         [object inspectWithSystem:[interpreter objectForIdentifier:@"sys" found:NULL]];
       else if ([object respondsToSelector:@selector(inspect)])
         [object inspect];
-      else [FSGenericObjectInspector genericObjectInspectorWithObject:object];
-    }  
-  }    
+      else {
+        BOOL knownBaseClass = NO;
+        for (Class cls in [FSObjectBrowserViewObjectHelper baseClasses]){
+          if ([object isKindOfClass:cls]) {
+            knownBaseClass = YES;
+            break;
+          }
+        }
+        if (knownBaseClass) {
+          FSDetailedObjectInspector *inspector = [FSDetailedObjectInspector detailedObjectInspectorWithObject:object
+                                                                                                  interpreter:interpreter];
+          [NSNotificationCenter.defaultCenter addObserver:FSInspectorRepository.class
+                                                 selector:@selector(removeInspector:)
+                                                     name:NSWindowWillCloseNotification
+                                                   object:inspector.window ];
+          [FSInspectorRepository addInspector:inspector];
+        }
+        else {
+          [FSGenericObjectInspector genericObjectInspectorWithObject:object];
+        }
+      }
+    }
+  }
 }
 
 void inspectCollection(id collection, FSSystem *system, NSArray *blocks)  // Factorize some code that would be duplicated in each collection class otherwise

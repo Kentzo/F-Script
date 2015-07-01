@@ -1,5 +1,0 @@
-{
-    ClassName = FSInterpreterView; 
-    SuperClass = NSView; 
-    Outlets = {"object1" = "id"; "object2" = "id"; "object2" = "id"; "object3" = "id"; "object4" = "id"; "object5" = "id"; "object6" = "id"; "object7" = "id"; "object8" = "id"; "object9" = "id";};
-}

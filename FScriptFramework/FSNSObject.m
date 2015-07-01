@@ -155,8 +155,8 @@
   //dir = NXHomeDirectory();  
   //[panel setRequiredFileType:@"fsobject"];
   
-  if ([panel runModal] == NSOKButton)
-    [self save:[panel filename]];
+  if ([panel runModal] == NSModalResponseOK)
+    [self save:[panel URL].absoluteString];
 }      
 
 - (void)throw

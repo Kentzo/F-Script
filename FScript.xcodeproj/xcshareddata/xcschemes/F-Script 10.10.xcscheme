@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "0500"
+   LastUpgradeVersion = "0700"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "E29F5BCC19FD93FD00AD90CF"
+               BlueprintIdentifier = "EDC2C8FF1A1AA50D00942777"
                BuildableName = "F-Script.app"
                BlueprintName = "F-Script 10.10"
                ReferencedContainer = "container:FScript.xcodeproj">
@@ -28,7 +28,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "E29F5DA619FD94FC00AD90CF"
+               BlueprintIdentifier = "EDC2CACF1A1AA52500942777"
                BuildableName = "FScript.framework"
                BlueprintName = "FScriptFramework 10.10"
                ReferencedContainer = "container:FScript.xcodeproj">
@@ -46,12 +46,14 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "E29F5BCC19FD93FD00AD90CF"
+            BlueprintIdentifier = "EDC2C8FF1A1AA50D00942777"
             BuildableName = "F-Script.app"
             BlueprintName = "F-Script 10.10"
             ReferencedContainer = "container:FScript.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
+      <AdditionalOptions>
+      </AdditionalOptions>
    </TestAction>
    <LaunchAction
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
@@ -61,11 +63,13 @@
       buildConfiguration = "Release"
       ignoresPersistentStateOnLaunch = "NO"
       debugDocumentVersioning = "YES"
+      debugServiceExtension = "internal"
       allowLocationSimulation = "YES">
-      <BuildableProductRunnable>
+      <BuildableProductRunnable
+         runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "E29F5BCC19FD93FD00AD90CF"
+            BlueprintIdentifier = "EDC2C8FF1A1AA50D00942777"
             BuildableName = "F-Script.app"
             BlueprintName = "F-Script 10.10"
             ReferencedContainer = "container:FScript.xcodeproj">
@@ -80,10 +84,11 @@
       useCustomWorkingDirectory = "NO"
       buildConfiguration = "Release"
       debugDocumentVersioning = "YES">
-      <BuildableProductRunnable>
+      <BuildableProductRunnable
+         runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "E29F5BCC19FD93FD00AD90CF"
+            BlueprintIdentifier = "EDC2C8FF1A1AA50D00942777"
             BuildableName = "F-Script.app"
             BlueprintName = "F-Script 10.10"
             ReferencedContainer = "container:FScript.xcodeproj">

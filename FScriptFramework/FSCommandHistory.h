@@ -26,7 +26,7 @@ store is removed.
 @interface FSCommandHistory : NSObject <NSCoding>
 {
   NSMutableArray *array;  // an array of NSString
-  NSInteger head, queue, cursor;
+  NSInteger head, queue, cursor, size;
 }
 
 - (id)addStr:(NSString *)str; // adds a string
@@ -44,5 +44,7 @@ store is removed.
                                         // set to the value of the argument. The receiver is filled
                                         // with empty strings.
 - (NSInteger)size;
+-(void)save;
++(FSCommandHistory*)latestHistoryWithSize:(NSUInteger)size;
 
 @end

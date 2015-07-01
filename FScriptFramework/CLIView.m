@@ -1,35 +1,6 @@
 /* CLIView.m Copyright (c) 1998-2009 Philippe Mougin.  */
 /*   This software is open source. See the license.  */  
 
-/*
-
-The organisation of the view hierarchy:
-
-      ----- CLIView --------------------------------------
-      |                                                  |
-      | ----- NSScrollView ----------------------------  |
-      | |                                             |  |
-      | |  ----- ShellView -------------------------  |  |
-      | |  | prompt>                               |  |  |
-      | |  |                                       |  |  |
-      | |  |                                       |  |  |
-      | |  |                                       |  |  |
-      | |  |                                       |  |  |
-      | |  |                                       |  |  |
-      | |  -----------------------------------------  |  |
-      | |                                             |  |
-      | -----------------------------------------------  |
-      |                                                  |
-      ----------------------------------------------------
-
-A CLIView has one subview: an NSScrollView.
- 
-This NSScrollView has a ShellView as document view.
-
-The ShellView is the view that displays the prompt, receive the keyboard events from the user, display
-the commands entered by the user and the results of those commands etc.  
-
-*/
 
 #import "CLIView.h"
 #import "ShellView.h"

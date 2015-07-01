@@ -6,6 +6,14 @@
 
 @interface FSObjectBrowserView (FSObjectBrowserViewObjectInfo)
 
-- (void)fillMatrix:(NSMatrix *)m withObject:(id)object; 
+- (void)fillMatrix:(NSMatrix*)m column:(NSUInteger)col withObject:(id)object;
    
+@end
+
+@interface FSObjectBrowserViewObjectHelper : NSObject
+@property (nonatomic, retain) FSObjectInspectorViewModelItem* rootViewModelItem;
++ (NSArray*)baseClasses;
+-(void)introspectPropertiesOfObject:(id)object;
+-(void)populateModelWithObject:(id)object;
+
 @end

@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="8121.17" systemVersion="14D136" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+    <dependencies>
+        <deployment version="1060" identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="8121.17"/>
+        <capability name="box content view" minToolsVersion="7.0"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner" customClass="FSManagedObjectContextInspector">
+            <connections>
+                <outlet property="collectionInspectorView" destination="7" id="10"/>
+                <outlet property="controller" destination="57" id="58"/>
+                <outlet property="entityList" destination="15" id="20"/>
+                <outlet property="fetchAutomaticallyButton" destination="37" id="70"/>
+                <outlet property="messageTextView" destination="33" id="36"/>
+                <outlet property="predicateTextView" destination="46" id="49"/>
+                <outlet property="tabView" destination="23" id="35"/>
+            </connections>
+        </customObject>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application"/>
+        <window title="Managed Object Context Inspector" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" visibleAtLaunch="NO" animationBehavior="default" id="5" userLabel="Window">
+            <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES" texturedBackground="YES"/>
+            <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
+            <rect key="contentRect" x="191" y="138" width="896" height="395"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="878"/>
+            <value key="minSize" type="size" width="854" height="282"/>
+            <view key="contentView" id="6">
+                <rect key="frame" x="0.0" y="0.0" width="896" height="395"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <tabView drawsBackground="NO" type="noTabsNoBorder" id="23">
+                        <rect key="frame" x="0.0" y="100" width="896" height="294"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <font key="font" metaFont="system"/>
+                        <tabViewItems>
+                            <tabViewItem label="collection" identifier="collection" id="24">
+                                <view key="view" id="26">
+                                    <rect key="frame" x="0.0" y="0.0" width="896" height="294"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <customView id="7" customClass="FSCollectionInspectorView">
+                                            <rect key="frame" x="0.0" y="0.0" width="896" height="294"/>
+                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                        </customView>
+                                    </subviews>
+                                </view>
+                            </tabViewItem>
+                            <tabViewItem label="message" identifier="message" id="25">
+                                <view key="view" id="27">
+                                    <rect key="frame" x="0.0" y="0.0" width="896" height="294"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                    <subviews>
+                                        <scrollView borderType="none" autohidesScrollers="YES" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" id="32">
+                                            <rect key="frame" x="0.0" y="0.0" width="896" height="294"/>
+                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                            <clipView key="contentView" id="bUQ-IK-GRi">
+                                                <rect key="frame" x="0.0" y="0.0" width="896" height="294"/>
+                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                <subviews>
+                                                    <textView editable="NO" importsGraphics="NO" findStyle="panel" usesRuler="YES" usesFontPanel="YES" verticallyResizable="YES" spellingCorrection="YES" smartInsertDelete="YES" id="33">
+                                                        <rect key="frame" x="0.0" y="62" width="898" height="294"/>
+                                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                        <size key="minSize" width="896" height="294"/>
+                                                        <size key="maxSize" width="898" height="10000000"/>
+                                                        <attributedString key="textStorage">
+                                                            <fragment>
+                                                                <string key="content" base64-UTF8="YES">
+CgkJCQkJCQkJCQkJCQoJCQkKCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCg
+</string>
+                                                                <attributes>
+                                                                    <font key="NSFont" size="12" name="Helvetica"/>
+                                                                    <paragraphStyle key="NSParagraphStyle" alignment="natural" lineBreakMode="wordWrapping" baseWritingDirection="natural"/>
+                                                                </attributes>
+                                                            </fragment>
+                                                            <fragment content="No object fetched yet">
+                                                                <attributes>
+                                                                    <font key="NSFont" size="14" name="Helvetica"/>
+                                                                    <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural"/>
+                                                                </attributes>
+                                                            </fragment>
+                                                        </attributedString>
+                                                        <color key="insertionPointColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                        <size key="minSize" width="896" height="294"/>
+                                                        <size key="maxSize" width="898" height="10000000"/>
+                                                    </textView>
+                                                </subviews>
+                                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                            </clipView>
+                                            <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="YES" id="96">
+                                                <rect key="frame" x="-100" y="-100" width="87" height="18"/>
+                                                <autoresizingMask key="autoresizingMask"/>
+                                            </scroller>
+                                            <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="95">
+                                                <rect key="frame" x="-30" y="1" width="15" height="292"/>
+                                                <autoresizingMask key="autoresizingMask"/>
+                                            </scroller>
+                                        </scrollView>
+                                    </subviews>
+                                </view>
+                            </tabViewItem>
+                        </tabViewItems>
+                    </tabView>
+                    <box verticalHuggingPriority="750" title="Box" boxType="separator" titlePosition="noTitle" id="40">
+                        <rect key="frame" x="0.0" y="97" width="896" height="5"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES"/>
+                        <color key="borderColor" white="0.0" alpha="0.41999999999999998" colorSpace="calibratedWhite"/>
+                        <color key="fillColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                        <font key="titleFont" metaFont="system"/>
+                    </box>
+                    <box title="Box" boxType="custom" borderType="line" titlePosition="noTitle" id="87">
+                        <rect key="frame" x="0.0" y="-6" width="898" height="106"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <view key="contentView" id="m74-aA-xAh">
+                            <rect key="frame" x="1" y="1" width="896" height="104"/>
+                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            <subviews>
+                                <button id="37">
+                                    <rect key="frame" x="563" y="35" width="145" height="18"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
+                                    <buttonCell key="cell" type="check" title="Fetch automatically" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="93">
+                                        <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                        <font key="font" metaFont="system"/>
+                                    </buttonCell>
+                                    <connections>
+                                        <action selector="changeFetchAutomatically:" target="-2" id="72"/>
+                                    </connections>
+                                </button>
+                                <button verticalHuggingPriority="750" id="43">
+                                    <rect key="frame" x="708" y="26" width="130" height="32"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
+                                    <buttonCell key="cell" type="push" title="New Inspector" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="94">
+                                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                        <font key="font" metaFont="system"/>
+                                    </buttonCell>
+                                    <connections>
+                                        <action selector="newInspector:" target="-2" id="44"/>
+                                    </connections>
+                                </button>
+                                <button verticalHuggingPriority="750" id="21">
+                                    <rect key="frame" x="481" y="26" width="82" height="32"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
+                                    <buttonCell key="cell" type="push" title="Fetch" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="92">
+                                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                        <font key="font" metaFont="system"/>
+                                    </buttonCell>
+                                    <connections>
+                                        <action selector="executeRequest:" target="-2" id="22"/>
+                                    </connections>
+                                </button>
+                                <popUpButton verticalHuggingPriority="750" id="15">
+                                    <rect key="frame" x="484" y="70" width="225" height="26"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
+                                    <popUpButtonCell key="cell" type="push" title="Item3" bezelStyle="rounded" alignment="left" lineBreakMode="clipping" state="on" borderStyle="borderAndBezel" inset="2" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="17" id="91">
+                                        <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
+                                        <font key="font" metaFont="system"/>
+                                        <menu key="menu" title="OtherViews" id="16">
+                                            <items>
+                                                <menuItem title="Item3" state="on" id="17"/>
+                                            </items>
+                                        </menu>
+                                    </popUpButtonCell>
+                                    <connections>
+                                        <action selector="changeEntity:" target="-2" id="39"/>
+                                    </connections>
+                                </popUpButton>
+                                <scrollView autohidesScrollers="YES" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" id="47">
+                                    <rect key="frame" x="18" y="23" width="458" height="71"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES"/>
+                                    <clipView key="contentView" autoresizesSubviews="NO" id="AgT-vo-WlN">
+                                        <rect key="frame" x="1" y="1" width="456" height="69"/>
+                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                        <subviews>
+                                            <customView id="46" customClass="FSPredicateTextView">
+                                                <rect key="frame" x="0.0" y="0.0" width="457" height="69"/>
+                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                <connections>
+                                                    <outlet property="delegate" destination="-2" id="50"/>
+                                                </connections>
+                                            </customView>
+                                        </subviews>
+                                    </clipView>
+                                    <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="0.42565599083900452" horizontal="YES" id="98">
+                                        <rect key="frame" x="-100" y="-100" width="343" height="15"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                    </scroller>
+                                    <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="0.73913043737411499" horizontal="NO" id="97">
+                                        <rect key="frame" x="-30" y="1" width="15" height="69"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                    </scroller>
+                                </scrollView>
+                            </subviews>
+                        </view>
+                        <color key="borderColor" white="0.0" alpha="0.41999999999999998" colorSpace="calibratedWhite"/>
+                        <color key="fillColor" red="0.90980399000000001" green="0.90980399000000001" blue="0.90980399000000001" alpha="1" colorSpace="deviceRGB"/>
+                    </box>
+                </subviews>
+            </view>
+            <connections>
+                <outlet property="delegate" destination="-2" id="63"/>
+                <outlet property="initialFirstResponder" destination="15" id="73"/>
+            </connections>
+        </window>
+        <objectController objectClassName="NSManagedObjectContext" id="57" userLabel="Controller">
+            <declaredKeys>
+                <string>stalenessInterval</string>
+            </declaredKeys>
+        </objectController>
+        <view id="41">
+            <rect key="frame" x="0.0" y="0.0" width="125" height="1"/>
+            <autoresizingMask key="autoresizingMask"/>
+        </view>
+    </objects>
+</document>

@@ -121,6 +121,7 @@
   case fscode_NSPoint: return [NSValue valueWithPoint:((NSPoint *)cPointer)[index]];
   case fscode_NSSize:  return [NSValue valueWithSize: ((NSSize *) cPointer)[index]];
   case fscode_NSRect:  return [NSValue valueWithRect: ((NSRect *) cPointer)[index]];
+  case fscode_NSEdgeInsets:  return [NSValue valueWithEdgeInsets: ((NSEdgeInsets *) cPointer)[index]];
   case '^':  { void *p = ((void **)cPointer)[index]; return (p ? [Pointer pointerWithCPointer:p type:type+1] : nil ); } 
   case 'v':  FSExecError(@"dereferencing \"void *\" pointer");
   default:   FSExecError(@"can't dereference pointer: the type of the referenced data is not supported by F-Script");
@@ -289,7 +290,15 @@
     }
     else FSArgumentError(elem,2,@"NSValue containing an NSRect",@"at:put:");
   
-  case '^':  
+  case fscode_NSEdgeInsets:
+    if ([elem isKindOfClass:[NSValue class]] && strcmp([elem objCType],@encode(NSEdgeInsets)) == 0)
+    {
+      ((NSEdgeInsets *)cPointer)[index] = [elem edgeInsetsValue];
+      return elem;
+    }
+    else FSArgumentError(elem,2,@"NSValue containing an NSEdgeInsets",@"top:left:bottom:right:");
+  
+  case '^':
     if      (elem == nil)                          ((void **)cPointer)[index] = NULL; 
     else if ([elem isKindOfClass:[Pointer class]]) ((void **)cPointer)[index] = [elem cPointer]; 
     else FSArgumentError(elem,2,@"Pointer",@"at:put:"); 

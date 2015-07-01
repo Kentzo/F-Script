@@ -17,5 +17,4 @@ I *highly* suggest you to use app that is specifically build for you version of 
 
 
 ##Paid Support
-
 If functional you need is missing but you're ready to pay for it, feel free to contact me. If not, create an issue anyway, I'll take a look as soon as I can.

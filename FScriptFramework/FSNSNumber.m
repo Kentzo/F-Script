@@ -190,7 +190,7 @@
 
   if (value < 1)
     return [FSArray array];
-  else if (r = [[[FSArray alloc] initFrom:0 to:value-1 step:1] autorelease])
+  else if ((r = [[[FSArray alloc] initFrom:0 to:value-1 step:1] autorelease]))
     return r;
   else
     FSExecError(@"not enough memory");
